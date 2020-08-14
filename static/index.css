@@ -1,0 +1,62 @@
+html {
+	margin: 0;
+	padding:0;
+	height: 100vh;
+	width: 100vw;
+	overflow-x: hidden;
+}
+
+body {
+	height: 100vh;
+	width: 100vw;
+	background: #003049;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#app {
+	height: 100vh;
+	width: 100vw;
+}
+
+#heading {
+	width: 100vw;
+	height: 10vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 4vw;
+	color: #F77F00;
+	font-family: 'Epilogue', sans-serif;
+}
+
+#covdash {
+	width: 100vw;
+	height: 60vh;
+}
+
+#countyName {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	font-size: 2vw;
+	color: #EAE2B7;
+	font-family: 'Epilogue', sans-serif;
+}
+
+#chart {
+	height: 50vh;
+	width: 100vw;
+}
+
+#selector {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+svg {
+	height: 50vh;
+	width: 100vw;
+}
