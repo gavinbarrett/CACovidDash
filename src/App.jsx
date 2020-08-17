@@ -12,9 +12,9 @@ const zipObjects = (obj1, obj2) => {
 function Graph({data, dates}) {
 	return (<div id='chart'>
 	<VictoryChart width={600} height={200}>
-	<VictoryAxis style={{tickLabels: {fontSize: 4, fill: '#EAE2B7'}, fontWeight: 'bold'}} tickFormat={dates} tickLabelComponent={<VictoryLabel angle={90}/>}/>
+	<VictoryAxis scale="time" style={{tickLabels: {fontSize: 4, fill: '#EAE2B7'}, fontWeight: 'bold'}} tickFormat={date => date.toLocaleString('en-us', {month: 'short'})} tickLabelComponent={<VictoryLabel angle={90}/>}/>
 	<VictoryAxis dependentAxis style={{tickLabels: {fill: '#EAE2B7'}}} fixLabelAxis={true} tickFormat={x => x}/>
-	<VictoryBar style={{data: {fill: '#FCBF49'}}} barWidth={2} barRatio={0.4} width={400} height={130} data={data} labels={d => d.x.toFixed(0)} labelComponent={<VictoryTooltip/>} x="date" y="new_cases"/>
+	<VictoryBar domainPadding={{x: 10, y: 50}} style={{data: {fill: '#FCBF49'}}} barWidth={2} barRatio={0.4} width={400} height={130} data={data} labels={d => d.x.toFixed(0)} labelComponent={<VictoryTooltip/>} x="date" y="new_cases"/>
 	</VictoryChart>
 	</div>);
 }
