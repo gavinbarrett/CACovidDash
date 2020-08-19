@@ -6,8 +6,9 @@ const CountySelector = () => {
 
 	return (<div id='countySelector'>
 	<select name='cselect' id='cselect'>
-	{countyList.map((name, index) => { 
-		(name === 'Sacramento') ? <option value={name} selected>{name}</option> : <option value={name}>{name}</option>;
+	{countyList.map((name, index) => {
+		// Set the list of counties to choose from. Make Sacramento county the default
+		return (name === 'Sacramento') ? <option value={name} selected>{name}</option> : <option value={name}>{name}</option>;
 	})}
 	</select>
 	</div>);
