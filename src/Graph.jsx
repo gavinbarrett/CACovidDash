@@ -1,7 +1,7 @@
 import React from 'react';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryLabel, VictoryTooltip, VictoryVoronoiContainer } from 'victory';
 
-function Graph({data, countyName}) {
+const Graph = ({data, countyName}) => {
 	return (<div id='chart'>
 	<div id='countyName'>{countyName}</div>
 	<VictoryChart width={600} height={200} containerComponent={<VictoryVoronoiContainer style={{labels: {fontSize: 5}}} labels={({datum}) => `${datum.date}: ${datum.new_cases}`}/>}>

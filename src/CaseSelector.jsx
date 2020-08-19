@@ -1,6 +1,6 @@
 import React from 'react';
 
-function CaseSelector({updateFilter, updateSelCounty}) {
+const CaseSelector = ({updateFilter, updateSelCounty}) => {
 	return(<div id='selector'>
 	<select name='filter' id='filter'>
 	<option value='New Cases'>New Cases</option>

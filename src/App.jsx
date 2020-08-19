@@ -4,16 +4,7 @@ import CaseSelector from './CaseSelector';
 import CountySelector from './CountySelector';
 import Graph from './Graph';
 
-const zipObjects = (obj1, obj2) => {
-	// zip a data object with a dates object
-	return Object.values(obj1).map((arrElem, index) => {
-		let str = Object.keys(obj2);
-		let day = arrElem.slice(5);
-		return {"date": day, "new_cases": obj2[str[index]]};
-	});
-}
-
-function App() {
+const App = () => {
 
 	const [data, updateData] = useState([]);
 	const [dates, updateDates] = useState([]);
@@ -25,6 +16,15 @@ function App() {
 		// pull data from the server for the selCounty county
 		getJSON(selCounty);
 	}, [filter, selCounty]);
+
+	const zipObjects = (obj1, obj2) => {
+		// zip a data object with a dates object
+		return Object.values(obj1).map((arrElem, index) => {
+			let str = Object.keys(obj2);
+			let day = arrElem.slice(5);
+			return {"date": day, "new_cases": obj2[str[index]]};
+		});
+	}
 
 	const getFilter = (dataFilter) => {
 		// return the hashmap key of the selected filter
