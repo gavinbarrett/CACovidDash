@@ -8,7 +8,6 @@ const Dashboard = () => {
 
 	const [data, updateData] = useState([]);
 	const [dates, updateDates] = useState([]);
-	const [graphs, updateGraphs] = useState([]);
 	const [filter, updateFilter] = useState('New Cases');
 	const [selCounty, updateSelCounty] = useState('Sacramento');
 
@@ -40,8 +39,6 @@ const Dashboard = () => {
 
 	const getJSON = (selectedCounty) => {
 		// pull data from the server and generate a corresponding graph
-		updateData([]);
-		updateDates([]);
 		const resp = fetch(`/get_county/${selectedCounty}`, {method: 'GET'})
 			.then(resp => { return resp.json() })
 			.then(dat => {
@@ -51,8 +48,8 @@ const Dashboard = () => {
 				let tag = getFilter(filter);
 				let obj2 = dat[tag];
 				let zipped = zipObjects(obj1, obj2);
-				let g = <Graph data={zipped} countyName={selCounty}/>;
-				updateGraphs(g);
+				updateData(zipped);
+				updateSelCounty(selectedCounty);
 			});
 	}
 
@@ -63,7 +60,7 @@ const Dashboard = () => {
 	<CaseSelector updateFilter={updateFilter} updateSelCounty={updateSelCounty}/>
 	</div>
 	<div id='covdash'>
-	<div id='graphContainer'>{graphs ? graphs : ''}</div>
+	<div id='graphContainer'><Graph data={data} countyName={selCounty}/></div>
 	</div>
 	</div>);
 }

@@ -11,10 +11,7 @@ const Graph = ({data, countyName}) => {
 	useEffect(() => {
 		// create an array for months on the x-axis
 		getDates();
-		console.log('data:');
-		console.log(monthDates);
-		console.log(ticks);
-	},[]);
+	},[data]);
 
 	const getDates = async () => {
 		let values = [];
@@ -49,10 +46,10 @@ const Graph = ({data, countyName}) => {
 
 	return (<div id='chart'>
 	<div id='countyName'>{countyName}</div>
-	<VictoryChart width={600} height={200} containerComponent={<VictoryVoronoiContainer style={{labels: {fontSize: 4}}, {data: {width: 100}}} labels={({datum}) => `${datum.date}: ${datum.new_cases}`}/>}>
+	<VictoryChart width={600} height={200} containerComponent={<VictoryVoronoiContainer style={{labels: {fontSize: 4}}, {data: {width: 100}}} labels={({datum}) => `${datum.date}: ${datum.new_cases}`}/>} animate={{duration: 550}}>
 	<VictoryAxis scale="time" style={{tickLabels: {fontSize: 4, fill: '#EAE2B7'}, fontWeight: 'bold'}} tickValues={ticks} tickFormat={monthDates}/>
-	<VictoryAxis dependentAxis style={{tickLabels: {fill: '#EAE2B7'}}}/>
-	<VictoryBar domainPadding={{x: 10, y: 50}} style={{data: {fill: ({active}) => active ? '#F77F00' : '#FCBF49'}}} barWidth={({active}) => active ? 5 : 3} barRatio={0.4} width={400} height={130} data={data} x="date" y="new_cases"/>
+	<VictoryAxis dependentAxis style={{tickLabels: {fill: '#EAE2B7', fontSize: 10}}}/>
+	<VictoryBar domainPadding={{x: 10, y: 50}} style={{data: {fill: ({active}) => active ? '#F77F00' : '#FCBF49'}}} barWidth={({active}) => active ? 5 : 3} barRatio={0.4} width={400} height={130} data={data} x="date" y="new_cases" animate/>
 	</VictoryChart>
 	</div>);
 }
