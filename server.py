@@ -14,6 +14,7 @@ app = Flask(__name__)
 scheduler = sched.scheduler(time.time, time.sleep)
 # create a data cache
 data_cache = defaultdict(lambda: None)
+counties = {"counties": ['Alameda', 'Alpine', 'Amador', 'Butte', 'Calaveras', 'Colusa', 'Contra Costa', 'Del Norte', 'El Dorado', 'Fresno', 'Glenn', 'Humboldt', 'Imperial', 'Inyo', 'Kern', 'Kings', 'Lake', 'Lassen', 'Los Angeles', 'Madera', 'Marin', 'Mariposa', 'Mendocino', 'Merced', 'Modoc', 'Mono', 'Monterey', 'Napa', 'Nevada', 'Orange', 'Placer', 'Plumas', 'Riverside', 'Sacramento', 'San Benito', 'San Bernardino', 'San Diego', 'San Francisco', 'San Joaquin', 'San Luis Obispo', 'San Mateo', 'Santa Barbara', 'Santa Clara', 'Santa Cruz', 'Shasta', 'Sierra', 'Siskiyou', 'Solano', 'Sonoma', 'Stanislaus', 'Sutter', 'Tehama', 'Trinity', 'Tulare', 'Tuolumne', 'Ventura', 'Yolo', 'Yuba']}
 
 def get_data():
 	# retrieve the cached data
@@ -68,10 +69,24 @@ def get_json():
 	# retrieve recent CA Covid data
 	data = get_data()
 	# extract the Placer county data
-	placer_data = data.loc[data['county'] == 'Sacramento']
+	res = defaultdict(lambda: None)
+	for value in counties['counties']:
+		d = data.loc[data['county'] == value]
+		res[value] = d.to_dict()
+		#print(d.to_dict())
+	
+	#d = data.loc[data['county'] == "Placer"]
+	#res["Placer"] = d.to_dict()
+	#print(res["Placer"])
+	
+	#print(res)
 	# the server will cache this data and retrieve new data each day
-	sac_data = placer_data.to_dict()
-	return json.dumps(sac_data)
+	#sac_data = placer_data.to_dict()
+	#print(dict(res))
+	j = json.dumps(dict(res))
+	j = j.replace("\'", "\"")
+	j = j.replace("NaN", "null")
+	return j
 
 @app.route('/', methods=['GET'])
 def return_landing():
@@ -81,4 +96,4 @@ if __name__ == "__main__":
 	# retrieve and cache the data
 	cache_data()
 	# start server
-	app.run(threaded=True)
+	app.run(host='0.0.0.0')

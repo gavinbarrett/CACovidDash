@@ -2,15 +2,19 @@ import React, {PureComponent, useEffect, useState} from 'react';
 import ReactDOM from 'react-dom';
 import { VictoryBar, VictoryChart, VictoryAxis, VictoryLabel, VictoryTooltip } from 'victory';
 
+const countyList = ["Alameda", "Alpine", "Amador", "Butte", "Calaveras", "Colusa", "Contra Costa", "Del Norte", "El Dorado", "Fresno", "Glenn", "Humboldt", "Imperial", "Inyo", "Kern", "Kings", "Lake", "Lassen", "Los Angeles", "Madera", "Marin", "Mariposa", "Mendocino", "Merced", "Modoc", "Mono", "Monterey", "Napa", "Nevada", "Orange", "Placer", "Plumas", "Riverside", "Sacramento", "San Benito", "San Bernardino", "San Diego", "San Francisco", "San Joaquin", "San Luis Obispo", "San Mateo", "Santa Barbara", "Santa Clara", "Santa Cruz", "Shasta", "Sierra", "Siskiyou", "Solano", "Sonoma", "Stanislaus", "Sutter", "Tehama", "Trinity", "Tulare", "Tuolumne", "Ventura", "Yolo", "Yuba"];
+
 const zipObjects = (obj1, obj2) => {
+	// zip a data object with a dates object
 	return Object.values(obj1).map((arrElem, index) => {
 		let str = Object.keys(obj2);
 		return {"date": arrElem, "new_cases": obj2[str[index]], "label": obj2[str[index]]};
 	});
 }
 
-function Graph({data, dates}) {
+function Graph({data, countyName}) {
 	return (<div id='chart'>
+	<div id='countyName'>{countyName}</div>
 	<VictoryChart width={600} height={200}>
 	<VictoryAxis scale="time" style={{tickLabels: {fontSize: 4, fill: '#EAE2B7'}, fontWeight: 'bold'}} tickFormat={date => date.toLocaleString('en-us', {month: 'short'})} tickLabelComponent={<VictoryLabel angle={90}/>}/>
 	<VictoryAxis dependentAxis style={{tickLabels: {fill: '#EAE2B7'}}} fixLabelAxis={true} tickFormat={x => x}/>
@@ -19,79 +23,88 @@ function Graph({data, dates}) {
 	</div>);
 }
 
-function CountySelector({countyList, updateData, updateDates, updateCountyName}) {
-	let counties = [];
-	countyList.map(county => {
-		if (county === 'Sacramento')
-			counties.push(<option value={county} selected>{county}</option>);
-		else
-			counties.push(<option value={county}>{county}</option>);
-	});
-
-	const changeCounty = () => {
-		const county = document.getElementById('county_selector');
-		const resp = fetch('/get_county/' + county.value, {method: 'GET'})
-			.then(resp => { return resp.json() })
-			.then(data => {
-				let obj1 = data['date'];
-				let dates = Object.values(obj1);
-				let obj2 = data['newcountconfirmed'];
-				let zipped = zipObjects(obj1, obj2);
-				updateData(zipped);
-				updateDates(dates);
-				updateCountyName(county.value);
-			});
-	}	
-	return (<div id='selector'>
-	<select name='county_selector' id='county_selector'>
-		{counties}
+function Selector({updateFilter, updateSelCounty}) {
+	return(<div id='selector'>
+	<select name='filter' id='filter'>
+	<option value='New Cases'>New Cases</option>
+	<option value='New Deaths'>New Deaths</option>
+	<option value='Total Cases'>Total Cases</option>
+	<option value='Total Deaths'>Total Deaths</option>
 	</select>
-	<button onClick={() => changeCounty()}>Find Data</button>
+	<button id='updata' onClick={() => {
+		// update the dashboard filter
+		updateFilter(document.getElementById('filter').value);
+		// update the dashboard county
+		updateSelCounty(document.getElementById('cselect').value);
+		// FIXME: add support for filtering by zip codes
+	}}>Update Graphs</button></div>);
+}
+
+function CountySelector() {
+	return (<div id='countySelector'>
+	<select name='cselect' id='cselect'>
+	{countyList.map((name, index) => { 
+		if (name === 'Sacramento')
+			return <option value={name} selected>{name}</option>;
+		else
+			return <option value={name}>{name}</option>;
+	})}
+	</select>
 	</div>);
 }
 
 function App() {
-	
-	const [data, updateData] = useState(null);
-	const [dates, updateDates] = useState(null);
-	const [counties, updateCounties] = useState(null);
-	const [countyName, updateCountyName] = useState(null);
+
+	const [data, updateData] = useState([]);
+	const [dates, updateDates] = useState([]);
+	const [graphs, updateGraphs] = useState([]);
+	const [filter, updateFilter] = useState('New Cases');
+	const [selCounty, updateSelCounty] = useState('Sacramento');
 
 	useEffect(() => {
-		// retrieve the list of CA counties
-		getCounties();
-		// get the initial county data (Sacramento county)
-		getJSON();
-	}, []);
+		// pull data from the server for the selCounty county
+		getJSON(selCounty);
+	}, [filter, selCounty]);
 
-	const getCounties = () => {
-		const resp = fetch('/get_counties', {method: 'GET'})
-			.then(resp => { return resp.json() })
-			.then(counties => {
-				updateCounties(counties['counties']);
-			});
+	const getFilter = (dataFilter) => {
+		// return the hashmap key of the selected filter
+		if (dataFilter === 'New Cases')
+			return 'newcountconfirmed';
+		else if (dataFilter === 'New Deaths')
+			return 'newcountdeaths';
+		else if (dataFilter === 'Total Cases')
+			return 'totalcountconfirmed';
+		else if (dataFilter === 'Total Deaths')
+			return 'totalcountdeaths';
 	}
 
-	const getJSON = () => {
-		const resp = fetch('/get_county/Sacramento', {method: 'GET'})
+	const getJSON = (selectedCounty) => {
+		// pull data from the server and generate a corresponding graph
+		updateData([]);
+		updateDates([]);
+		console.log('Updating json');
+		const resp = fetch(`/get_county/${selectedCounty}`, {method: 'GET'})
 			.then(resp => { return resp.json() })
-			.then(data => {
-				let obj1 = data['date'];
-				let dates = Object.values(obj1);
-				let obj2 = data['newcountconfirmed'];
+			.then(dat => {
+				// save dates and new covid counts
+				let obj1 = dat['date'];
+				let ds = Object.values(obj1);
+				let tag = getFilter(filter);
+				let obj2 = dat[tag];
 				let zipped = zipObjects(obj1, obj2);
-				updateData(zipped);
-				updateDates(dates);
-				updateCountyName('Sacramento');
+				let g = <Graph data={zipped} countyName={selCounty}/>;
+				updateGraphs(g);
 			});
 	}
 
 	return(<div id='app'>
 	<div id='heading'>California Covid Dash</div>
+	<div id='selectortab'>
+	<CountySelector/>
+	<Selector updateFilter={updateFilter} updateSelCounty={updateSelCounty}/>
+	</div>
 	<div id='covdash'>
-	{counties ? <CountySelector countyList={counties} updateData={updateData} updateDates={updateDates} updateCountyName={updateCountyName}/> : ''}
-	<div id='countyName'>{countyName ? countyName : ''}</div>
-	{data ? <Graph data={data} dates={dates}/> : ''}
+	<div id='graphContainer'>{graphs ? graphs : ''}</div>
 	</div>
 	</div>);
 }

@@ -3,7 +3,7 @@ html {
 	padding:0;
 	height: 100vh;
 	width: 100vw;
-	overflow-x: hidden;
+	overflow: hidden;
 }
 
 body {
@@ -46,11 +46,23 @@ body {
 }
 
 #chart {
-	height: 50vh;
+	height: 75vh;
 	width: 100vw;
 }
 
+#graphContainer {
+	display: flex;
+	flex-direction: column;
+
+}
+
 #selector {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#selectortab {
 	display: flex;
 	justify-content: center;
 	align-items: center;
