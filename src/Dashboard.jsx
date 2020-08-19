@@ -4,7 +4,7 @@ import CaseSelector from './CaseSelector';
 import CountySelector from './CountySelector';
 import Graph from './Graph';
 
-const App = () => {
+const Dashboard = () => {
 
 	const [data, updateData] = useState([]);
 	const [dates, updateDates] = useState([]);
@@ -68,4 +68,4 @@ const App = () => {
 	</div>);
 }
 
-ReactDOM.render(<App/>, document.getElementById('root'));
+ReactDOM.render(<Dashboard/>, document.getElementById('root'));

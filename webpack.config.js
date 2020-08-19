@@ -1,5 +1,5 @@
 module.exports = {
-	entry: './src/App.jsx',
+	entry: './src/Dashboard.jsx',
 	mode: 'development',
 	module: {
 		rules: [
@@ -14,7 +14,7 @@ module.exports = {
 		extensions: ['*', '.js', '.jsx']
 	},
 	output: {
-		filename: 'App.js',
+		filename: 'Dashboard.js',
 		path: __dirname + '/static',
 	},
 };
