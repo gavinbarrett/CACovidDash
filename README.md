@@ -8,6 +8,6 @@ Data is pulled daily from California's [Open Data Portal](https://data.ca.gov/da
 The application is currently being hosted on [Heroku](http://covid-data-ca.herokuapp.com) and might take a moment to respond if the server is sleeping.
 
 The user will be able to navigate through the different counties in California and view their Covid case and death rates. Filtering data by zip code will be added as a feature in a future version.
-<p>
+<p align='center'>
 <img src='images/covidash.gif' width=700px>
 </p>
