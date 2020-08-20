@@ -28,7 +28,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	font-size: 4vw;
+	font-size: 3vw;
 	font-weight: bold;
 	color: #F77F00;
 	font-family: 'Epilogue', sans-serif;
@@ -70,6 +70,7 @@ body {
 
 #cselect:hover {
 	background: #FCBF49;
+	cursor: pointer;
 }
 
 #filter {
@@ -90,6 +91,17 @@ body {
 
 #filter:hover {
 	background: #FCBF49;
+	cursor: pointer;
+}
+
+#filterdemo {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	width: 100vw;
+	font-size: 1.5vw;
+	font-family: 'Epilogue', sans-serif;
+	color: #EAE2B7;
 }
 
 #updata {
@@ -104,10 +116,11 @@ body {
 
 #updata:hover {
 	background: #FCBF49;
+	cursor: pointer;
 }
 
 #chart {
-	height: 75vh;
+	height: 50vh;
 	width: 100vw;
 	display: flex;
 	flex-direction: column;
@@ -136,6 +149,9 @@ body {
 }
 
 svg {
-	height: 50vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	height: 30vh;
 	width: 90vw;
 }

@@ -60,7 +60,7 @@ const Dashboard = () => {
 	<CaseSelector updateFilter={updateFilter} updateSelCounty={updateSelCounty}/>
 	</div>
 	<div id='covdash'>
-	<div id='graphContainer'><Graph data={data} countyName={selCounty}/></div>
+	<div id='graphContainer'><Graph data={data} countyName={selCounty} filter={filter}/></div>
 	</div>
 	</div>);
 }
