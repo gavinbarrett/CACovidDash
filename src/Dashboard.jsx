@@ -45,7 +45,8 @@ const Dashboard = () => {
 				// save dates and new covid counts
 				let obj1 = dat['date'];
 				let ds = Object.values(obj1);
-				let tag = getFilter(filter);
+				// return the appropriate filter
+				const tag = getFilter(filter);
 				let obj2 = dat[tag];
 				let zipped = zipObjects(obj1, obj2);
 				updateData(zipped);
