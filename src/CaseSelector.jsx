@@ -13,7 +13,6 @@ const CaseSelector = ({updateFilter, updateSelCounty}) => {
 		updateFilter(document.getElementById('filter').value);
 		// update the dashboard county
 		updateSelCounty(document.getElementById('cselect').value);
-		// FIXME: add support for filtering by zip codes
 	}}>Update Graphs</button></div>);
 }
 

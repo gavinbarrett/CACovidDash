@@ -1,0 +1,42 @@
+#selector {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+#filter {
+	background: #F77F00;
+	border: 0;
+	font-size: 2vw;
+	font-weight: bold;
+	width: 40vw;
+	height: 10vh;
+    color: #003049;
+	border-right: 2px solid #003049;
+	text-align: center;
+	-o-appearance: none;
+    -ms-appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+}
+
+#filter:hover {
+	background: #FCBF49;
+	cursor: pointer;
+}
+
+#updata {
+	width: 20vw;
+	height: 10vh;
+	color: #003049;
+	font-size: 2vw;
+	font-weight: bold;
+	border: 0;
+	background: #F77F00;
+}
+
+#updata:hover {
+	background: #FCBF49;
+	cursor: pointer;
+}
