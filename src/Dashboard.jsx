@@ -3,10 +3,11 @@ import ReactDOM from 'react-dom';
 import CaseSelector from './CaseSelector';
 import CountySelector from './CountySelector';
 import Graph from './Graph';
+import './sass/Dashboard.scss';
 
 const Dashboard = () => {
 
-	const [data, updateData] = useState([]);
+	const [data, updateData] = useState(null);
 	const [dates, updateDates] = useState([]);
 	const [filter, updateFilter] = useState('New Cases');
 	const [selCounty, updateSelCounty] = useState('Sacramento');
@@ -21,7 +22,7 @@ const Dashboard = () => {
 		return Object.values(obj1).map((arrElem, index) => {
 			let str = Object.keys(obj2);
 			let day = arrElem.slice(5);
-			return {"date": day, "new_cases": obj2[str[index]]};
+			return {"date": day, "amount": obj2[str[index]]};
 		});
 	}
 
@@ -60,8 +61,8 @@ const Dashboard = () => {
 	<CountySelector/>
 	<CaseSelector updateFilter={updateFilter} updateSelCounty={updateSelCounty}/>
 	</div>
-	<div id='covdash'>
-	<div id='graphContainer'><Graph data={data} countyName={selCounty} filter={filter}/></div>
+	<div id='graphContainer'>
+		{data ? <Graph data={data} countyName={selCounty} filter={filter}/> : ''}
 	</div>
 	</div>);
 }

@@ -61,4 +61,4 @@ if __name__ == "__main__":
 	# start the scheduler
 	setup_scheduler()
 	# start server
-	app.run()
+	app.run(host='0.0.0.0')

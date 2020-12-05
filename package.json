@@ -5,20 +5,25 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon server.py",
-	"test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "chart.js": "^2.9.3",
     "react": "^16.13.1",
-    "react-dom": "^16.13.1",
-    "victory": "^35.0.8"
+    "react-chartjs-2": "^2.10.0",
+    "react-dom": "^16.13.1"
   },
   "devDependencies": {
     "@babel/core": "^7.11.0",
     "@babel/preset-react": "^7.10.4",
     "babel-loader": "^8.1.0",
+    "css-loader": "^5.0.0",
+    "sass": "^1.27.0",
+    "sass-loader": "^10.0.3",
+    "style-loader": "^2.0.0",
     "webpack": "^4.44.1",
     "webpack-cli": "^3.3.12"
   }
