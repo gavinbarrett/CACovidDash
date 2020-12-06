@@ -1,5 +1,5 @@
 import React from 'react';
-import { Line } from 'react-chartjs-2';
+import { Bar } from 'react-chartjs-2';
 import './sass/Graph.scss';
 
 const Graph = ({data, countyName, filter}) => {
@@ -19,7 +19,7 @@ const Graph = ({data, countyName, filter}) => {
 	<div id='countyName'>{countyName}</div>
 	<div id='filterdemo'>Showing: {filter}</div>
 	<div className='graphcontainer'>
-		{data ? <Line data={state} options={{ maintainAspectRatio: false, responsive: true }}/> : 'Loading'}
+		{data ? <Bar data={state} options={{ maintainAspectRatio: false, responsive: true }}/> : 'Loading'}
 	</div>
 	</div>);
 }
