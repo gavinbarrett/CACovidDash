@@ -9,5 +9,5 @@ The application is currently being hosted on [Heroku](http://covid-data-ca.herok
 
 The user will be able to navigate through the different counties in California and view their Covid case and death rates. Filtering data by zip code will be added as a feature in a future version.
 <p align='center'>
-<img src='images/covidash.gif' width=700px>
+<img src='images/coviddash.png' width=700px>
 </p>
