@@ -10,7 +10,7 @@ const Dashboard = () => {
 	const [data, updateData] = useState(null);
 	const [dates, updateDates] = useState([]);
 	const [filter, updateFilter] = useState('New Cases');
-	const [selCounty, updateSelCounty] = useState('Sacramento');
+	const [selCounty, updateSelCounty] = useState('Statewide');
 
 	useEffect(() => {
 		// pull data from the server for the selCounty county
@@ -43,13 +43,18 @@ const Dashboard = () => {
 		const resp = fetch(`/get_county/${selectedCounty}`, {method: 'GET'})
 			.then(resp => { return resp.json() })
 			.then(dat => {
+				console.log(`dat: ${dat}`)
 				// save dates and new covid counts
 				let obj1 = dat['date'];
-				let ds = Object.values(obj1);
+				let ds = Object.values(dat['date']);
+				console.log(`obj1: ${obj1}\nds: ${ds}`);
 				// return the appropriate filter
 				const tag = getFilter(filter);
 				let obj2 = dat[tag];
+				console.log(`obj2: ${Object.keys(obj2)}`);
 				let zipped = zipObjects(obj1, obj2);
+				console.log(`Zipped: ${zipped}`);
+				console.log(`County: ${selectedCounty}`);
 				updateData(zipped);
 				updateSelCounty(selectedCounty);
 			});

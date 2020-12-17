@@ -14,12 +14,17 @@ const Graph = ({data, countyName, filter}) => {
 			data: data.map(date => date['amount'])
 		}]
 	}
+	
+	const options = {
+        maintainAspectRatio: false,
+		responsive: true,
+	};
 
 	return (<div id='chart'>
 	<div id='countyName'>{countyName}</div>
 	<div id='filterdemo'>Showing: {filter}</div>
 	<div className='graphcontainer'>
-		{data ? <Bar data={state} options={{ maintainAspectRatio: false, responsive: true }}/> : 'Loading'}
+		{data ? <Bar data={state} options={options}/> : 'Loading'}
 	</div>
 	</div>);
 }

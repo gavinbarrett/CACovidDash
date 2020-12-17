@@ -1,7 +1,6 @@
 import sys
 import json
 import time
-import logging
 import requests
 import pandas as pd
 from io import StringIO
@@ -37,11 +36,14 @@ def cache_data():
 def get_county(county):
 	# grab cached data
 	data = get_data()
+	if county == 'Statewide':
+		# return the Covid data for all of California
+		state_data = data.groupby('date', as_index=False).agg({"newcountconfirmed":"sum","newcountdeaths":"sum","totalcountconfirmed":"sum","totalcountdeaths":"sum"})
+		return json.dumps(state_data.to_dict())
 	# extract the county data
 	county_data = data.loc[data['county'] == county]
 	# the server will cache this data and retrieve new data each day
-	county_data = county_data.to_dict()
-	return json.dumps(county_data)
+	return json.dumps(county_data.to_dict())
 
 @app.route('/', methods=['GET'])
 def return_landing():
