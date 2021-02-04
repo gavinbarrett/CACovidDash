@@ -1,41 +1,51 @@
 import sys
 import json
 import time
+import redis
 import requests
 import pandas as pd
 from io import StringIO
-from collections import defaultdict
+from datetime import timedelta
 from flask import Flask, render_template, send_file, jsonify
-from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
-# create a data cache
-data_cache = defaultdict(lambda: None)
+
+# create a Redis cache
+cache = redis.Redis()
+
+# set key for cached data
+data_key = 'covid-data'
 # set the data source url
-url='https://data.ca.gov/dataset/590188d5-8545-4c93-a9a0-e230f0db7290/resource/926fd08f-cc91-4828-af38-bd45de97f8c3/download/statewide_cases.csv'
+url = 'https://data.ca.gov/dataset/590188d5-8545-4c93-a9a0-e230f0db7290/resource/926fd08f-cc91-4828-af38-bd45de97f8c3/download/statewide_cases.csv'
 
 def get_data():
-	# retrieve the cached data
-	if data_cache['data'] is not None:
-		return data_cache['data']
+	# check the cache for existing Covid data
+	if cache.exists(data_key):
+		# retrieve cached data
+		return cache.get(data_key)
 	# retrieve the data
-	cache_data()
-	# return the data dictionary
-	return data_cache['data']
+	if (cache_data()):
+		# data was successfully cached
+		return cache.get(data_key)
+	return False
 
 def cache_data():
-	# get the csv data
-	r = requests.get(url)
+	# download the csv data
+	resp = requests.get(url)
 	# construct a Pandas dataframe
-	data = pd.read_csv(StringIO(r.content.decode()))
-	# cache and return our retrieved data
-	data_cache['data'] = data
-	print('Covid Data cached.')
+	data = resp.content.decode()
+	#data = pd.read_csv(StringIO(resp.content.decode()))
+	# serialize the dataframe and cache it for 12 hours
+	return cache.setex(data_key, timedelta(minutes=720), value=data)
 
 @app.route('/get_county/<county>')
 def get_county(county):
 	# grab cached data
-	data = get_data()
+	serialized_data = get_data()
+	if not serialized_data:
+		return json.dumps({"0": "failed"})
+	# deserialize Covid data
+	data = pd.read_csv(StringIO(serialized_data.decode()))
 	if county == 'Statewide':
 		# return the Covid data for all of California
 		state_data = data.groupby('date', as_index=False).agg({"newcountconfirmed":"sum","newcountdeaths":"sum","totalcountconfirmed":"sum","totalcountdeaths":"sum"})
@@ -60,7 +70,5 @@ def setup_scheduler():
 if __name__ == "__main__":
 	# retrieve and cache the data
 	cache_data()
-	# start the scheduler
-	setup_scheduler()
 	# start server
 	app.run(host='0.0.0.0')
