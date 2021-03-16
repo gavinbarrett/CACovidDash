@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "chart.js": "^2.9.4",
+    "nodemon": "^2.0.7",
     "react": "^16.13.1",
     "react-chartjs-2": "^2.11.1",
     "react-dom": "^16.13.1"
