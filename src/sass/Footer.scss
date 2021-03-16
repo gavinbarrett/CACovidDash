@@ -1,0 +1,30 @@
+footer {
+	width: 100vw;
+	height: 25vh;
+	background: #00131c;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
+}
+
+#footer-box {
+	width: 15vw;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	padding-top: 3rem;
+}
+
+#footer-box > .footer-text {
+	color: #F77F00;	
+	font-weight: bold;
+	font-size: 1rem;
+	font-family: 'Epilogue', sans-serif;
+	margin-bottom: 2vw;
+	text-decoration: none;
+	cursor: default;
+}
+
+#footer-box > .footer-text:active, .footer-text:focus {
+	outline: none;
+}

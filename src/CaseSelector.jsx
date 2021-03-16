@@ -1,16 +1,18 @@
 import React from 'react';
 import './sass/CaseSelector.scss';
 
-const CaseSelector = ({updateFilter, updateSelCounty}) => {
+export const CaseSelector = ({updateFilter, updateSelCounty}) => {
 	return(<div id='selector'>
-	<div className='selector'>
-	<select name='filter' id='filter'>
-	<option value='New Cases'>New Cases</option>
-	<option value='New Deaths'>New Deaths</option>
-	<option value='Total Cases'>Total Cases</option>
-	<option value='Total Deaths'>Total Deaths</option>
-	</select>
-	</div>
+		<div className='selector'>
+			<select name='filter' id='filter'>
+				<option value='Cases'>Cases</option>
+				<option value='Deaths'>Deaths</option>
+				<option value='Positive Tests'>Positive Tests</option>
+				<option value='Reported Cases'>Reported Cases</option>
+				<option value='Reported Deaths'>Reported Deaths</option>
+				<option value='Reported Tests'>Reported Tests</option>
+			</select>
+		</div>
 	<button id='updata' onClick={() => {
 		// update the dashboard filter
 		updateFilter(document.getElementById('filter').value);
@@ -18,5 +20,3 @@ const CaseSelector = ({updateFilter, updateSelCounty}) => {
 		updateSelCounty(document.getElementById('cselect').value);
 	}}>Update Graphs</button></div>);
 }
-
-export default CaseSelector;

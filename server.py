@@ -13,62 +13,109 @@ app = Flask(__name__)
 # create a Redis cache
 cache = redis.Redis()
 
-# set key for cached data
-data_key = 'covid-data'
 # set the data source url
-url = 'https://data.ca.gov/dataset/590188d5-8545-4c93-a9a0-e230f0db7290/resource/926fd08f-cc91-4828-af38-bd45de97f8c3/download/statewide_cases.csv'
+url = 'https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/covid19cases_test.csv'
+
+def clean_data(data):
+	''' Clean the data '''
+	# set all null case data to 0
+	data['cases'] = data['cases'].fillna(0)
+	data['deaths'] = data['deaths'].fillna(0)
+	data['total_tests'] = data['total_tests'].fillna(0)
+	data['positive_tests'] = data['positive_tests'].fillna(0)
+	data['reported_cases'] = data['reported_cases'].fillna(0)
+	data['reported_deaths'] = data['reported_deaths'].fillna(0)
+	data['reported_tests'] = data['reported_tests'].fillna(0)
+	
+	# split state and county data
+	county_d = data.loc[data['area_type'] == 'County']
+	state_d = data.loc[data['area_type'] == 'State']
+	
+	# drop NaN dates
+	county_d = county_d.dropna(subset=['date'])
+	state_d = state_d.dropna(subset=['date'])
+
+	# set null population fields to the mean
+	# FIXME: don't take the mean of both county and state data
+	county_d['population'] = county_d['population'].fillna(county_d['population'].mean())
+	state_d['population'] = state_d['population'].fillna(state_d['population'].mean())
+	#print(county_d)
+	#print(state_d)
+	return county_d, state_d
+
+def cache_clean_data(data):
+	''' Clean data and cache it '''
+	county, state = clean_data(data)
+	# insert county data into Redis cache
+	set_county = cache.setex('County', timedelta(minutes=720), value=county.to_csv())
+	# insert county data into Redis cache
+	set_state = cache.setex('State', timedelta(minutes=720), value=state.to_csv())
+	return set_county, set_state
+
+def get_state_data():
+	# check the cache for existing Covid data
+	if cache.exists('State'):
+		# retrieve cached data
+		return cache.get('State')
+	# retrieve the data
+	county, state = cache_data()
+	if (state):
+		# data was successfully cached
+		return cache.get('State')
+	return False
 
 def get_data():
 	# check the cache for existing Covid data
-	if cache.exists(data_key):
+	if cache.exists('County') and cache.exists('State'):
 		# retrieve cached data
-		return cache.get(data_key)
+		return cache.get('County')
 	# retrieve the data
-	if (cache_data()):
+	county, state = cache_data()
+	if (county):
 		# data was successfully cached
-		return cache.get(data_key)
+		return cache.get('County')
 	return False
 
 def cache_data():
 	# download the csv data
 	resp = requests.get(url)
 	# construct a Pandas dataframe
-	data = resp.content.decode()
-	#data = pd.read_csv(StringIO(resp.content.decode()))
+	pdata = pd.read_csv(StringIO(resp.content.decode()))
 	# serialize the dataframe and cache it for 12 hours
-	return cache.setex(data_key, timedelta(minutes=720), value=data)
+	return cache_clean_data(pdata)
+
+@app.route('/get_state/')
+def get_state():
+	data = get_state_data()
+	print(data[:100])
+	if data:
+		pdata = pd.read_csv(StringIO(data.decode()))
+		rdata = pdata.sort_values(by="date")
+		rdata.reset_index(inplace=True)
+		return json.dumps({"data": rdata.to_dict()})
+	else:
+		print(f'No data retrieved.')
+	return json.dumps({"0": "failed"})
 
 @app.route('/get_county/<county>')
 def get_county(county):
-	# grab cached data
-	serialized_data = get_data()
-	if not serialized_data:
-		return json.dumps({"0": "failed"})
-	# deserialize Covid data
-	data = pd.read_csv(StringIO(serialized_data.decode()))
-	if county == 'Statewide':
-		# return the Covid data for all of California
-		state_data = data.groupby('date', as_index=False).agg({"newcountconfirmed":"sum","newcountdeaths":"sum","totalcountconfirmed":"sum","totalcountdeaths":"sum"})
-		return json.dumps(state_data.to_dict())
-	# extract the county data
-	county_data = data.loc[data['county'] == county]
-	# the server will cache this data and retrieve new data each day
-	return json.dumps(county_data.to_dict())
+	data = get_data()
+	if data:
+		pdata = pd.read_csv(StringIO(data.decode()))
+		rdata = pdata.loc[pdata['area'] == county]
+		rdata = rdata.sort_values(by="date")
+		rdata.reset_index(inplace=True)
+		return json.dumps({"data": rdata.to_dict()})
+	else:
+		print(f'No data retrieved.')
+	return json.dumps({"0": "failed"})
 
 @app.route('/', methods=['GET'])
 def return_landing():
 	return render_template('./index.html');
 
-def setup_scheduler():
-	# initialize a scheduler
-	scheduler = BackgroundScheduler()
-	# set the scheduler to pull data and cache it every day
-	scheduler.add_job(func=cache_data, trigger="interval", seconds=86400)
-	# start the scheduler
-	scheduler.start()
-
 if __name__ == "__main__":
 	# retrieve and cache the data
-	cache_data()
+	#cache_data()
 	# start server
 	app.run(host='0.0.0.0')

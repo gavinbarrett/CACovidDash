@@ -2,8 +2,7 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import './sass/Graph.scss';
 
-const Graph = ({data, countyName, filter}) => {
-
+export const Graph = ({data, countyName, filter}) => {
 	const state = {
 		labels: data.map(date => date['date']),
 		datasets: [{
@@ -28,5 +27,3 @@ const Graph = ({data, countyName, filter}) => {
 	</div>
 	</div>);
 }
-
-export default Graph;
