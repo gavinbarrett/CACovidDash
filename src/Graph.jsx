@@ -23,7 +23,7 @@ export const Graph = ({data, countyName, filter}) => {
 	<div id='countyName'>{countyName}</div>
 	<div id='filterdemo'>Showing: {filter}</div>
 	<div className='graphcontainer'>
-		{data ? <Bar data={state} options={options}/> : 'Loading'}
+		{data ? <Bar data={state} options={options}/> : <div>{"Loading"}</div>}
 	</div>
 	</div>);
 }

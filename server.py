@@ -7,6 +7,7 @@ import pandas as pd
 from io import StringIO
 from datetime import timedelta
 from flask import Flask, render_template, send_file, jsonify
+from apscheduler.schedulers.background import BackgroundScheduler
 
 app = Flask(__name__)
 
@@ -116,6 +117,10 @@ def return_landing():
 
 if __name__ == "__main__":
 	# retrieve and cache the data
-	#cache_data()
+	cache_data()
+	scheduler = BackgroundScheduler()
+	# set cache data function to run every 720 minutes (12 hours)
+	scheduler.add_job(cache_data, 'interval', seconds=43200)
+	scheduler.start()
 	# start server
 	app.run(host='0.0.0.0')
