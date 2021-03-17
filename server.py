@@ -98,8 +98,8 @@ def get_state():
 	data = get_state_data()
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
-		rdata.reset_index(inplace=True)
-		return json.dumps({"data": rdata.to_dict()})
+		pdata.reset_index(inplace=True)
+		return json.dumps({"data": pdata.to_dict()})
 	else:
 		print(f'No data retrieved.')
 	return json.dumps({"0": "failed"})
