@@ -15,33 +15,39 @@ app = Flask(__name__)
 cache = redis.Redis()
 
 # set the data source url
-url = 'https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/covid19cases_test.csv'
+url = 'https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/vw_cases_withcumulative.csv'
 
 def clean_data(data):
+	print(f'data: {data}')
 	''' Clean the data '''
 	# set all null case data to 0
-	data['cases'] = data['cases'].fillna(0)
-	data['deaths'] = data['deaths'].fillna(0)
-	data['total_tests'] = data['total_tests'].fillna(0)
-	data['positive_tests'] = data['positive_tests'].fillna(0)
-	data['reported_cases'] = data['reported_cases'].fillna(0)
-	data['reported_deaths'] = data['reported_deaths'].fillna(0)
-	data['reported_tests'] = data['reported_tests'].fillna(0)
+	data['CASES'] = data['CASES'].fillna(0)
+	data['CUMULATIVE_CASES'] = data['CUMULATIVE_CASES'].fillna(0)
+	data['DEATHS'] = data['DEATHS'].fillna(0)
+	data['CUMULATIVE_DEATHS'] = data['CUMULATIVE_DEATHS'].fillna(0)
+	data['TOTAL_TESTS'] = data['TOTAL_TESTS'].fillna(0)
+	data['CUMULATIVE_TOTAL_TESTS'] = data['CUMULATIVE_TOTAL_TESTS'].fillna(0)
+	data['POSITIVE_TESTS'] = data['POSITIVE_TESTS'].fillna(0)
+	data['CUMULATIVE_POSITIVE_TESTS'] = data['CUMULATIVE_POSITIVE_TESTS'].fillna(0)
+	data['REPORTED_CASES'] = data['REPORTED_CASES'].fillna(0)
+	data['CUMULATIVE_REPORTED_CASES'] = data['CUMULATIVE_REPORTED_CASES'].fillna(0)
+	data['REPORTED_DEATHS'] = data['REPORTED_DEATHS'].fillna(0)
+	data['CUMULATIVE_REPORTED_DEATHS'] = data['CUMULATIVE_REPORTED_DEATHS'].fillna(0)
+	data['REPORTED_TESTS'] = data['REPORTED_TESTS'].fillna(0)
+	data['CUMULATIVE_REPORTED_TESTS'] = data['CUMULATIVE_REPORTED_TESTS'].fillna(0)
 	
 	# split state and county data
-	county_d = data.loc[data['area_type'] == 'County']
-	state_d = data.loc[data['area_type'] == 'State']
+	county_d = data.loc[data['AREA_TYPE'] == 'County']
+	state_d = data.loc[data['AREA_TYPE'] == 'State']
 	
 	# drop NaN dates
-	county_d = county_d.dropna(subset=['date'])
-	state_d = state_d.dropna(subset=['date'])
+	county_d = county_d.dropna(subset=['DATE'])
+	state_d = state_d.dropna(subset=['DATE'])
 
 	# set null population fields to the mean
 	# FIXME: don't take the mean of both county and state data
-	county_d['population'] = county_d['population'].fillna(county_d['population'].mean())
-	state_d['population'] = state_d['population'].fillna(state_d['population'].mean())
-	#print(county_d)
-	#print(state_d)
+	county_d['POPULATION'] = county_d['POPULATION'].fillna(county_d['POPULATION'].mean())
+	state_d['POPULATION'] = state_d['POPULATION'].fillna(state_d['POPULATION'].mean())
 	return county_d, state_d
 
 def cache_clean_data(data):
@@ -65,9 +71,9 @@ def get_state_data():
 		return cache.get('State')
 	return False
 
-def get_data():
+def get_county_data():
 	# check the cache for existing Covid data
-	if cache.exists('County') and cache.exists('State'):
+	if cache.exists('County'):
 		# retrieve cached data
 		return cache.get('County')
 	# retrieve the data
@@ -80,6 +86,8 @@ def get_data():
 def cache_data():
 	# download the csv data
 	resp = requests.get(url)
+	print(url)
+	print(resp.content)
 	# construct a Pandas dataframe
 	pdata = pd.read_csv(StringIO(resp.content.decode()))
 	# serialize the dataframe and cache it for 12 hours
@@ -88,10 +96,9 @@ def cache_data():
 @app.route('/get_state/')
 def get_state():
 	data = get_state_data()
-	print(data[:100])
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
-		rdata = pdata.sort_values(by="date")
+		rdata = pdata.sort_values(by="DATE")
 		rdata.reset_index(inplace=True)
 		return json.dumps({"data": rdata.to_dict()})
 	else:
@@ -100,12 +107,12 @@ def get_state():
 
 @app.route('/get_county/<county>')
 def get_county(county):
-	data = get_data()
+	data = get_county_data()
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
-		rdata = pdata.loc[pdata['area'] == county]
-		rdata = rdata.sort_values(by="date")
+		rdata = pdata.loc[pdata['AREA'] == county]
 		rdata.reset_index(inplace=True)
+		print(rdata)
 		return json.dumps({"data": rdata.to_dict()})
 	else:
 		print(f'No data retrieved.')

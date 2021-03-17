@@ -4,6 +4,10 @@
 	align-items: center;
 }
 
+#cselect:focus, #cselect:active {
+	outline: none;
+}
+
 #filter {
 	background: #F77F00;
 	border: 0;
@@ -29,6 +33,10 @@
 	cursor: pointer;
 }
 
+#filter:focus, #filter:active {
+	outline: none;
+}
+
 #updata {
 	width: 20vw;
 	height: 7vh;
@@ -42,4 +50,8 @@
 #updata:hover {
 	background: #FCBF49;
 	cursor: pointer;
+}
+
+#updata:focus, #updata:active {
+	outline: none;
 }

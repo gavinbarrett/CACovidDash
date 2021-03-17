@@ -18,9 +18,12 @@ const Dashboard = () => {
 	}, [filter, selCounty]);
 
 	const zipObjects = (obj1, obj2) => {
+		console.log(obj1);
+		console.log(obj2);
 		// zip a data object with a dates object
 		const str = Object.keys(obj2);
 		return Object.values(obj1).map((arrElem, index) => {
+			//console.log(arrElem);
 			return {"date": arrElem, "amount": obj2[str[index]]};
 		});
 	}
@@ -28,19 +31,33 @@ const Dashboard = () => {
 	const getFilter = (dataFilter) => {
 		// return the hashmap key of the selected filter
 		if (dataFilter === 'Cases')
-			return 'cases';
+			return 'CASES';
+		else if (dataFilter === 'Cumulative Cases')
+			return 'CUMULATIVE_CASES';
 		else if (dataFilter === 'Deaths')
-			return 'deaths';
+			return 'DEATHS';
+		else if (dataFilter === 'Cumulative Deaths')
+			return 'CUMULATIVE_DEATHS';
 		else if (dataFilter === 'Total Tests')
-			return 'total_tests';
+			return 'TOTAL_TESTS';
+		else if (dataFilter === 'Cumulative Total Tests')
+			return 'CUMULATIVE_TOTAL_TESTS';
 		else if (dataFilter === 'Positive Tests')
-			return 'positive_tests';
+			return 'POSITIVE_TESTS';
+		else if (dataFilter === 'Cumulative Positive Tests')
+			return 'CUMULATIVE_POSITIVE_TESTS';
 		else if (dataFilter === 'Reported Cases')
-			return 'reported_cases';
+			return 'REPORTED_CASES';
+		else if (dataFilter === 'Cumulative Reported Cases')
+			return 'CUMULATIVE_REPORTED_CASES';
 		else if (dataFilter === 'Reported Deaths')
-			return 'reported_death';
-		else if (dataFilter === 'Reported Tests')
-			return 'reported_tests';
+			return 'REPORTED_DEATHS';
+		else if (dataFilter === 'Cumulative Reported Deaths')
+			return 'CUMULATIVE_REPORTED_DEATHS';
+		else if (dataFilter ===	'Reported Tests')
+			return 'REPORTED_TESTS';
+		else if (dataFilter === 'Cumulative Reported Tests')
+			return 'CUMULATIVE_REPORTED_TESTS';
 	}
 
 	const getJSON = (selectedCounty) => {
@@ -49,9 +66,8 @@ const Dashboard = () => {
 			const resp = fetch('/get_state/', {method: 'GET'})
 				.then(resp => { return resp.json() })
 				.then(dat => {
-					console.table(dat);
 					const tag = getFilter(filter);
-					const dates = dat['data']['date'];
+					const dates = dat['data']['DATE'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
 					updateData(zipped);
@@ -62,9 +78,8 @@ const Dashboard = () => {
 				.then(resp => { return resp.json() })
 				.then(dat => {
 					// save dates and new covid counts
-					console.table(dat);
 					const tag = getFilter(filter);
-					const dates = dat['data']['date'];
+					const dates = dat['data']['DATE'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
 					updateData(zipped);

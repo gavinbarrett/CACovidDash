@@ -11,6 +11,12 @@ export const CaseSelector = ({updateFilter, updateSelCounty}) => {
 				<option value='Reported Cases'>Reported Cases</option>
 				<option value='Reported Deaths'>Reported Deaths</option>
 				<option value='Reported Tests'>Reported Tests</option>
+				<option value='Cumulative Cases'>CumulativeCases</option>
+				<option value='Cumulative Deaths'>Cumulative Deaths</option>
+				<option value='Cumulative Positive Tests'>Cumulative Positive Tests</option>
+				<option value='Cumulative Reported Cases'>Cumulative Reported Cases</option>
+				<option value='Cumulative Reported Deaths'>Cumulative Reported Deaths</option>
+				<option value='Cumulative Reported Tests'>Cumulative Reported Tests</option>
 			</select>
 		</div>
 	<button id='updata' onClick={() => {
