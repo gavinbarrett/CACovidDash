@@ -18,7 +18,6 @@ cache = redis.Redis()
 url = 'https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/vw_cases_withcumulative.csv'
 
 def clean_data(data):
-	print(f'data: {data}')
 	''' Clean the data '''
 	# set all null case data to 0
 	data['CASES'] = data['CASES'].fillna(0)
@@ -86,8 +85,6 @@ def get_county_data():
 def cache_data():
 	# download the csv data
 	resp = requests.get(url)
-	print(url)
-	print(resp.content)
 	# construct a Pandas dataframe
 	pdata = pd.read_csv(StringIO(resp.content.decode()))
 	# serialize the dataframe and cache it for 12 hours
