@@ -123,7 +123,7 @@ if __name__ == "__main__":
 	cache_data()
 	scheduler = BackgroundScheduler()
 	# set cache data function to run every 720 minutes (12 hours)
-	scheduler.add_job(cache_data, 'interval', seconds=43200)
+	scheduler.add_job(cache_data, 'interval', seconds=21600)
 	scheduler.start()
 	# start server
 	app.run(host='0.0.0.0')
