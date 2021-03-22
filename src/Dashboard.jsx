@@ -18,8 +18,6 @@ const Dashboard = () => {
 	}, [filter, selCounty]);
 
 	const zipObjects = (obj1, obj2) => {
-		console.log(obj1);
-		console.log(obj2);
 		// zip a data object with a dates object
 		const str = Object.keys(obj2);
 		return Object.values(obj1).map((arrElem, index) => {
@@ -70,7 +68,7 @@ const Dashboard = () => {
 					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
-					updateData(zipped);
+					updateData(zipped.reverse());
 					updateSelCounty(selectedCounty);
 				});
 		} else {
@@ -82,7 +80,7 @@ const Dashboard = () => {
 					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
-					updateData(zipped);
+					updateData(zipped.reverse());
 					updateSelCounty(selectedCounty);
 				});
 		}
