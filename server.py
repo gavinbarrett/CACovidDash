@@ -43,10 +43,6 @@ def clean_data(data):
 	county_d = county_d.dropna(subset=['date'])
 	state_d = state_d.dropna(subset=['date'])
 	
-	# 
-	rdata.sort_values(by=['date'])
-	rdata.reset_index(inplace=True)
-	
 	# set null population fields to the mean
 	# FIXME: don't take the mean of both county and state data
 	county_d['population'] = county_d['population'].fillna(county_d['population'].mean())
@@ -99,8 +95,8 @@ def get_state():
 	data = get_state_data()
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
-		#rdata.sort_values(by=['date'])
-		#pdata.reset_index(inplace=True)
+		pdata = pdata.sort_values(by=['date'])
+		pdata.reset_index(inplace=True)
 		return json.dumps({"data": pdata.to_dict()})
 	else:
 		print(f'No data retrieved.')
@@ -112,8 +108,8 @@ def get_county(county):
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
 		rdata = pdata.loc[pdata['area'] == county]
-		#rdata.sort_values(by=['date'])
-		#rdata.reset_index(inplace=True)
+		rdata = rdata.sort_values(by=['date'])
+		rdata.reset_index(inplace=True)
 		return json.dumps({"data": rdata.to_dict()})
 	else:
 		print(f'No data retrieved.')

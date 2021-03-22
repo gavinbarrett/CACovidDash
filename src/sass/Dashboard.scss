@@ -18,6 +18,7 @@ body {
 	display: flex;
 	justify-content: center;
 	align-items: center;
+	scrollbar-width: thin;
 }
 
 canvas {
@@ -25,7 +26,7 @@ canvas {
 	height: 20vh;
 }
 
-#app {
+#root, #app {
 	width: 100vw;
 	height: 100vh;
 	scrollbar-width: thin;
