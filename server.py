@@ -106,7 +106,7 @@ def get_county(county):
 	data = get_county_data()
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
-		rdata = pdata.loc[pdata['AREA'] == county]
+		rdata = pdata.loc[pdata['area'] == county]
 		rdata.reset_index(inplace=True)
 		print(rdata)
 		return json.dumps({"data": rdata.to_dict()})
@@ -122,7 +122,7 @@ if __name__ == "__main__":
 	# retrieve and cache the data
 	cache_data()
 	scheduler = BackgroundScheduler()
-	# set cache data function to run every 720 minutes (12 hours)
+	# set cache data function to run every 360 minutes (6 hours)
 	scheduler.add_job(cache_data, 'interval', seconds=21600)
 	scheduler.start()
 	# start server
