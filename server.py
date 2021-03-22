@@ -108,7 +108,6 @@ def get_county(county):
 		pdata = pd.read_csv(StringIO(data.decode()))
 		rdata = pdata.loc[pdata['area'] == county]
 		rdata.reset_index(inplace=True)
-		print(rdata)
 		return json.dumps({"data": rdata.to_dict()})
 	else:
 		print(f'No data retrieved.')
