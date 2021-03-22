@@ -95,6 +95,7 @@ def get_state():
 	data = get_state_data()
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
+		rdata.sort_values(by=['date'])
 		pdata.reset_index(inplace=True)
 		return json.dumps({"data": pdata.to_dict()})
 	else:
@@ -107,6 +108,7 @@ def get_county(county):
 	if data:
 		pdata = pd.read_csv(StringIO(data.decode()))
 		rdata = pdata.loc[pdata['area'] == county]
+		rdata.sort_values(by=['date'])
 		rdata.reset_index(inplace=True)
 		return json.dumps({"data": rdata.to_dict()})
 	else:

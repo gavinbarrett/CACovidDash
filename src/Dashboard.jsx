@@ -68,7 +68,7 @@ const Dashboard = () => {
 					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
-					updateData(zipped.reverse());
+					updateData(zipped);
 					updateSelCounty(selectedCounty);
 				});
 		} else {
@@ -80,7 +80,7 @@ const Dashboard = () => {
 					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
-					updateData(zipped.reverse());
+					updateData(zipped);
 					updateSelCounty(selectedCounty);
 				});
 		}
