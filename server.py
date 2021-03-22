@@ -15,38 +15,38 @@ app = Flask(__name__)
 cache = redis.Redis()
 
 # set the data source url
-url = 'https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/vw_cases_withcumulative.csv'
+url = "https://data.chhs.ca.gov/dataset/f333528b-4d38-4814-bebb-12db1f10f535/resource/046cdd2b-31e5-4d34-9ed3-b48cdbc4be7a/download/covid19cases_test.csv"
 
 def clean_data(data):
 	''' Clean the data '''
 	# set all null case data to 0
-	data['CASES'] = data['CASES'].fillna(0)
-	data['CUMULATIVE_CASES'] = data['CUMULATIVE_CASES'].fillna(0)
-	data['DEATHS'] = data['DEATHS'].fillna(0)
-	data['CUMULATIVE_DEATHS'] = data['CUMULATIVE_DEATHS'].fillna(0)
-	data['TOTAL_TESTS'] = data['TOTAL_TESTS'].fillna(0)
-	data['CUMULATIVE_TOTAL_TESTS'] = data['CUMULATIVE_TOTAL_TESTS'].fillna(0)
-	data['POSITIVE_TESTS'] = data['POSITIVE_TESTS'].fillna(0)
-	data['CUMULATIVE_POSITIVE_TESTS'] = data['CUMULATIVE_POSITIVE_TESTS'].fillna(0)
-	data['REPORTED_CASES'] = data['REPORTED_CASES'].fillna(0)
-	data['CUMULATIVE_REPORTED_CASES'] = data['CUMULATIVE_REPORTED_CASES'].fillna(0)
-	data['REPORTED_DEATHS'] = data['REPORTED_DEATHS'].fillna(0)
-	data['CUMULATIVE_REPORTED_DEATHS'] = data['CUMULATIVE_REPORTED_DEATHS'].fillna(0)
-	data['REPORTED_TESTS'] = data['REPORTED_TESTS'].fillna(0)
-	data['CUMULATIVE_REPORTED_TESTS'] = data['CUMULATIVE_REPORTED_TESTS'].fillna(0)
+	data['cases'] = data['cases'].fillna(0)
+	data['cumulative_cases'] = data['cumulative_cases'].fillna(0)
+	data['deaths'] = data['deaths'].fillna(0)
+	data['cumulative_deaths'] = data['cumulative_deaths'].fillna(0)
+	data['total_tests'] = data['total_tests'].fillna(0)
+	data['cumulative_total_tests'] = data['cumulative_total_tests'].fillna(0)
+	data['positive_tests'] = data['positive_tests'].fillna(0)
+	data['cumulative_postive_tests'] = data['cumulative_positive_tests'].fillna(0)
+	data['reported_cases'] = data['reported_cases'].fillna(0)
+	data['cumulative_reported_cases'] = data['cumulative_reported_cases'].fillna(0)
+	data['reported_deaths'] = data['reported_deaths'].fillna(0)
+	data['cumulative_reported_deaths'] = data['cumulative_reported_deaths'].fillna(0)
+	data['reported_tests'] = data['reported_tests'].fillna(0)
+	data['cumulative_reported_tests'] = data['cumulative_reported_tests'].fillna(0)
 	
 	# split state and county data
-	county_d = data.loc[data['AREA_TYPE'] == 'County']
-	state_d = data.loc[data['AREA_TYPE'] == 'State']
+	county_d = data.loc[data['area_type'] == 'County']
+	state_d = data.loc[data['area_type'] == 'State']
 	
 	# drop NaN dates
-	county_d = county_d.dropna(subset=['DATE'])
-	state_d = state_d.dropna(subset=['DATE'])
+	county_d = county_d.dropna(subset=['date'])
+	state_d = state_d.dropna(subset=['date'])
 
 	# set null population fields to the mean
 	# FIXME: don't take the mean of both county and state data
-	county_d['POPULATION'] = county_d['POPULATION'].fillna(county_d['POPULATION'].mean())
-	state_d['POPULATION'] = state_d['POPULATION'].fillna(state_d['POPULATION'].mean())
+	county_d['population'] = county_d['population'].fillna(county_d['population'].mean())
+	state_d['population'] = state_d['population'].fillna(state_d['population'].mean())
 	return county_d, state_d
 
 def cache_clean_data(data):
