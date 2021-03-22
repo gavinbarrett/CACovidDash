@@ -31,33 +31,33 @@ const Dashboard = () => {
 	const getFilter = (dataFilter) => {
 		// return the hashmap key of the selected filter
 		if (dataFilter === 'Cases')
-			return 'CASES';
+			return 'cases';
 		else if (dataFilter === 'Cumulative Cases')
-			return 'CUMULATIVE_CASES';
+			return 'cumulative_cases';
 		else if (dataFilter === 'Deaths')
-			return 'DEATHS';
+			return 'deaths';
 		else if (dataFilter === 'Cumulative Deaths')
-			return 'CUMULATIVE_DEATHS';
+			return 'cumulative_deaths';
 		else if (dataFilter === 'Total Tests')
-			return 'TOTAL_TESTS';
+			return 'total_tests';
 		else if (dataFilter === 'Cumulative Total Tests')
-			return 'CUMULATIVE_TOTAL_TESTS';
+			return 'cumulative_total_tests';
 		else if (dataFilter === 'Positive Tests')
-			return 'POSITIVE_TESTS';
+			return 'positive_tests';
 		else if (dataFilter === 'Cumulative Positive Tests')
-			return 'CUMULATIVE_POSITIVE_TESTS';
+			return 'cumulative_positive_tests';
 		else if (dataFilter === 'Reported Cases')
-			return 'REPORTED_CASES';
+			return 'reported_cases';
 		else if (dataFilter === 'Cumulative Reported Cases')
-			return 'CUMULATIVE_REPORTED_CASES';
+			return 'cumulative_reported_cases';
 		else if (dataFilter === 'Reported Deaths')
-			return 'REPORTED_DEATHS';
+			return 'reported_deaths';
 		else if (dataFilter === 'Cumulative Reported Deaths')
-			return 'CUMULATIVE_REPORTED_DEATHS';
+			return 'cumulative_reported_deaths';
 		else if (dataFilter ===	'Reported Tests')
-			return 'REPORTED_TESTS';
+			return 'reported_tests';
 		else if (dataFilter === 'Cumulative Reported Tests')
-			return 'CUMULATIVE_REPORTED_TESTS';
+			return 'cumulative_reported_tests';
 	}
 
 	const getJSON = (selectedCounty) => {
@@ -67,7 +67,7 @@ const Dashboard = () => {
 				.then(resp => { return resp.json() })
 				.then(dat => {
 					const tag = getFilter(filter);
-					const dates = dat['data']['DATE'];
+					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
 					updateData(zipped);
@@ -79,7 +79,7 @@ const Dashboard = () => {
 				.then(dat => {
 					// save dates and new covid counts
 					const tag = getFilter(filter);
-					const dates = dat['data']['DATE'];
+					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
 					updateData(zipped);
@@ -90,13 +90,13 @@ const Dashboard = () => {
 
 	return(<><div id='app'>
 	<div id='heading'>California Covid Dash</div>
-	<div id='selectortab'>
-	<CountySelector/>
-	<CaseSelector updateFilter={updateFilter} updateSelCounty={updateSelCounty}/>
-	</div>
-	<div id='graphContainer'>
-		{data ? <Graph data={data} countyName={selCounty} filter={filter}/> : ''}
-	</div>
+		<div id='selectortab'>
+			<CountySelector/>
+			<CaseSelector updateFilter={updateFilter} updateSelCounty={updateSelCounty}/>
+		</div>
+		<div id='graphContainer'>
+			{data ? <Graph data={data} countyName={selCounty} filter={filter}/> : ''}
+		</div>
 	</div>
 	<Footer/></>);
 }
