@@ -80,6 +80,7 @@ const Dashboard = () => {
 					const dates = dat['data']['date'];
 					const filt = dat['data'][tag];
 					const zipped = zipObjects(dates, filt);
+					console.log(zipped);
 					updateData(zipped);
 					updateSelCounty(selectedCounty);
 				});

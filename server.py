@@ -44,7 +44,6 @@ def clean_data(data):
 	state_d = state_d.dropna(subset=['date'])
 	
 	# set null population fields to the mean
-	# FIXME: don't take the mean of both county and state data
 	county_d['population'] = county_d['population'].fillna(county_d['population'].mean())
 	state_d['population'] = state_d['population'].fillna(state_d['population'].mean())
 	return county_d, state_d

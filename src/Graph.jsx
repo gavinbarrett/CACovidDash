@@ -13,12 +13,9 @@ export const Graph = ({data, countyName, filter}) => {
 			data: data.map(date => date['amount'])
 		}]
 	}
-	
 	const options = {
         maintainAspectRatio: false,
-		responsive: true,
 	};
-
 	return (<div id='chart'>
 	<div id='countyName'>{countyName}</div>
 	<div id='filterdemo'>Showing: {filter}</div>
