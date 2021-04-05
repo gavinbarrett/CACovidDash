@@ -1,4 +1,4 @@
-## This project is currently no longer live. After several struggles with an very inconsistent API from the people publishing Covid data on California's Open Data Portal, I have decided to pull the project.
+## This project is no longer live. After several struggles with an very inconsistent API from the people publishing Covid data on California's Open Data Portal, I have decided to pull the project.
 
 ## Description
 This is a Covid-19 data dashboard for the state of California, USA. You are able to view data from all 58 counties. This data includes new cases by day, new deaths by day, total cases by day, and total deaths by day.
